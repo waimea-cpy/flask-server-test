@@ -15,4 +15,4 @@ COPY . .
 RUN pip install -r ./requirements.txt
 
 # Specify the command to run on container start
-CMD ["flask", "run", "--debug"]
+CMD ["flask", "run"]

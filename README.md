@@ -35,12 +35,22 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Launching the Server
+## Initialising the DB
 
 If the 
+```Bash
+python app/data/setup.py
+```
+
+## Launching the Server
+
 ```Bash
 flask run
 ```
 
-Or... Run via the IDE, checking that the IDE is using the virtual environment
+Or to get full debug info...
+
+```Bash
+flask run --debug
+```
 

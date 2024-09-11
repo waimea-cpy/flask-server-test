@@ -1,7 +1,15 @@
+# Run this file to (re)initialise the SQLite DB
+
+import os 
+import sys 
 import sqlite3
 
-connection = sqlite3.connect('things.db')
+scriptDir = os.path.dirname(os.path.abspath(sys.argv[0])) 
+sqlitePath = os.path.join(scriptDir, "data.db")
+schemaPath = os.path.join(scriptDir, "schema.sql")
 
-with open('schema.sql') as f:
+connection = sqlite3.connect(sqlitePath)
+
+with open(schemaPath) as f:
     connection.executescript(f.read())
 
