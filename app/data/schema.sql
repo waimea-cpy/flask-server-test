@@ -1,0 +1,15 @@
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `post`;
+
+CREATE TABLE user (
+    `id`   INTEGER PRIMARY KEY AUTOINCREMENT,
+    `name` TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE thing (
+    `id`    INTEGER PRIMARY KEY AUTOINCREMENT,
+    `owner` INTEGER NOT NULL,
+    `name`  TEXT NOT NULL,
+    FOREIGN KEY (`owner`) REFERENCES `user` (`id`)
+);
+
