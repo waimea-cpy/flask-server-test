@@ -1,0 +1,20 @@
+{% extends 'base.jinja' %}
+
+{% block content %}
+
+    <h1>{{ title }}</h1>
+
+    <article>
+        <ul>
+        {% for person in people %}
+            <li>{{ person['id'] }}: {{ person['name'] }}</li>
+        {% endfor %}
+        </ul>
+    </article>
+
+    <article>
+        {% include 'person-form.html' %}
+    </article>
+    
+{% endblock %}
+

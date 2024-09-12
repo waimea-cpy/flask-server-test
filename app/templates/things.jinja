@@ -1,0 +1,17 @@
+{% extends 'base.jinja' %}
+
+{% block content %}
+
+    <h1>{{ title }}</h1>
+
+    <ul>
+
+    {% for thing in things %}
+
+        <li>{{ thing['tid'] }}: {{ thing['tname'] }} ({{ thing['uname'] }})</li>
+	
+    {% endfor %}
+
+    </ul>
+    
+{% endblock %}

@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, g
+from flask import Flask, g, render_template
 from markupsafe import escape
 
 
@@ -17,6 +17,27 @@ app = Flask(__name__)
 # Home Page
 @app.get("/")
 def helloWorld():
+    return render_template(
+        "greet.jinja", 
+        title="Hello!"
+    )
+
+
+#-------------------------------------------
+# Greeting
+@app.get("/hello/<name>")
+def hello(name: str):
+    return render_template(
+        "greet.jinja", 
+        title="Hello!",
+        name=name
+    )
+
+
+#-------------------------------------------
+# Things Page
+@app.get("/things")
+def listThings():
     query = """
         SELECT  thing.id   AS tid,
                 thing.name AS tname,
@@ -24,21 +45,38 @@ def helloWorld():
         FROM thing
         JOIN user ON thing.owner = user.id    
     """
-    things = db().execute(query).fetchall()
-    for thing in things:
-        print(f"{thing['tid']}: {thing['tname']} ({thing['uname']})")
-    return "<h1>Hello, World!</h1>"
+    
+    return render_template(
+        "things.jinja", 
+        title="All the Things",
+        things=db().execute(query).fetchall()
+    )
 
 
 #-------------------------------------------
-# Greeting
-@app.get("/hello/<name>")
-def hello(name: str):
+# New Thing
+@app.get("/thing/create")
+def newThing():
     query = """
         INSERT INTO thing (name, owner) VALUES ("Bacon", 1)    
     """
     db().execute(query)
     return f"<h1>Hello, {escape(name)}!</h1>"
+
+
+#-------------------------------------------
+# People Page
+@app.get("/people")
+def listPeople():
+    query = """
+        SELECT * FROM user    
+    """
+    
+    return render_template(
+        "people.jinja", 
+        title="All the People",
+        people=db().execute(query).fetchall()
+    )
 
 
 
