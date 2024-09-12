@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, g, render_template
+from flask import Flask, g, render_template, redirect, request
 from markupsafe import escape
 
 
@@ -16,67 +16,116 @@ app = Flask(__name__)
 #-------------------------------------------
 # Home Page
 @app.get("/")
+
 def helloWorld():
     return render_template(
-        "greet.jinja", 
-        title="Hello!"
+        "greet.jinja",
+        title = "Hello, World!"
     )
 
 
 #-------------------------------------------
 # Greeting
 @app.get("/hello/<name>")
-def hello(name: str):
+
+def hello(name:str):
     return render_template(
-        "greet.jinja", 
-        title="Hello!",
-        name=name
+        "greet.jinja",
+        title = "Hello, Human!",
+        name = name
     )
 
 
 #-------------------------------------------
 # Things Page
 @app.get("/things")
+
 def listThings():
     query = """
-        SELECT  thing.id   AS tid,
-                thing.name AS tname,
-                user.name  AS uname 
+        SELECT  thing.id   AS t_id,
+                thing.name AS t_name,
+                user.name  AS u_name
         FROM thing
-        JOIN user ON thing.owner = user.id    
+        JOIN user ON thing.owner = user.id
     """
-    
+    thingRecords = db().execute(query).fetchall()
+
+    query = "SELECT * FROM user ORDER BY name ASC"
+    peopleRecords = db().execute(query).fetchall()
+
     return render_template(
-        "things.jinja", 
-        title="All the Things",
-        things=db().execute(query).fetchall()
+        "things.jinja",
+        title = "All the Things",
+        things = thingRecords,
+        people = peopleRecords
     )
 
 
 #-------------------------------------------
 # New Thing
-@app.get("/thing/create")
+@app.post("/thing/new")
+
 def newThing():
     query = """
-        INSERT INTO thing (name, owner) VALUES ("Bacon", 1)    
+        INSERT INTO thing (name, owner)
+        VALUES (?, ?)
     """
-    db().execute(query)
-    return f"<h1>Hello, {escape(name)}!</h1>"
+    name = request.form['name']
+    owner = request.form['owner']
+
+    db().execute(query, (name, owner))
+
+    return redirect("/things")
 
 
 #-------------------------------------------
 # People Page
 @app.get("/people")
+
 def listPeople():
-    query = """
-        SELECT * FROM user    
-    """
-    
+    query = "SELECT * FROM user ORDER BY name ASC"
+    peopleRecords = db().execute(query).fetchall()
+
     return render_template(
-        "people.jinja", 
-        title="All the People",
-        people=db().execute(query).fetchall()
+        "people.jinja",
+        title = "All the People",
+        people = peopleRecords
     )
+
+
+#-------------------------------------------
+# People Page
+@app.get("/person/<id>")
+
+def showPerson(id:int):
+    query = "SELECT * FROM user WHERE id=?"
+    personRecord = db().execute(query, (id,)).fetchone()
+
+    query = "SELECT * FROM thing WHERE owner=?"
+    thingRecords = db().execute(query, (id,)).fetchall()
+
+    return render_template(
+        "person.jinja",
+        title = "Person Details",
+        person = personRecord,
+        things = thingRecords
+    )
+
+
+#-------------------------------------------
+# New Person
+@app.post("/person/new")
+
+def newPerson():
+    query = """
+        INSERT INTO user (name)
+        VALUES (?)
+    """
+    name = request.form['name']
+
+    db().execute(query, (name,))
+
+    return redirect("/people")
 
 
 

@@ -4,14 +4,39 @@
 
     <h1>{{ title }}</h1>
 
-    <ul>
+    <article>
 
-    {% for thing in things %}
+        <ul>
 
-        <li>{{ thing['tid'] }}: {{ thing['tname'] }} ({{ thing['uname'] }})</li>
-	
-    {% endfor %}
+        {% for thing in things %}
+            <li><strong>{{ thing['t_name'] }}</strong> (owned by {{ thing['u_name'] }})</li>
+        {% endfor %}
 
-    </ul>
-    
+        </ul>
+
+    </article>
+
+    <article>
+        <form action="/thing/new" method="post">
+
+            <label>Name</label>
+            <input name="name" type="text" required>
+
+            <label>Owner</label>
+            <select name="owner" required>
+                <option value="">Select one...</option>
+
+                {% for person in people %}
+                    <option value="{{ person['id'] }}">{{ person['name'] }}</option>
+                {% endfor %}
+
+            </select>
+
+            <input type="submit" value="Add Person">
+
+        </form>
+    </article>
+
+
 {% endblock %}
+

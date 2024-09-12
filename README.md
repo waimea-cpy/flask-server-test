@@ -37,12 +37,15 @@ pip install -r requirements.txt
 
 ## Initialising the DB
 
-If the 
+To setup the DB schema (or to reset the DB), run the `setup.py` script:
+
 ```Bash
 python app/data/setup.py
 ```
 
 ## Launching the Server
+
+Since the project is configured as a module called **app** (with main code in `__init__.py`), then running the server is as simple as:
 
 ```Bash
 flask run
@@ -53,4 +56,25 @@ Or to get full debug info...
 ```Bash
 flask run --debug
 ```
+
+## Deploying to Railway
+
+Deploying to Railway from this repo with no additional tweaking should 'just work'. 
+
+All that is required is to specify tha host address to run on (`0.0.0.0`), and to generate a public URL. In the Railway project settings:
+
+#### Build
+- Check *Builder* is **DockerFile** (should be auto-detected)
+
+#### Deploy
+- Set a *Custom Start Command*:
+  ```Bash
+  flask run --host=0.0.0.0
+  ```
+
+#### Networking
+- Select *Generate a Domain* and make sure port is set to **5000** (should be auto-set)
+ 
+
+
 
