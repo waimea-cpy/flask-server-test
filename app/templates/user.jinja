@@ -1,0 +1,46 @@
+{% extends 'base.jinja' %}
+
+
+{% block title %}User Details{% endblock %}
+
+
+{% block content %}
+
+    {% if user %}
+
+        <h1>{{ user['name'] }}</h1>
+
+        <article>
+
+            <h2>Owns</h2>
+
+            {% if things %}
+
+                <ul>
+
+                {% for thing in things %}
+
+                    <li>
+                        {{ thing['name'] }}
+                    </li>
+
+                {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>Nothing!</p>
+
+            {% endif %}
+
+        </article>
+
+    {% else %}
+
+        <h1>Invalid ID!</h1>
+
+    {% endif %}
+
+{% endblock %}
+

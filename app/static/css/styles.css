@@ -1,3 +1,11 @@
+:root {
+    --primary: #d81b60;
+    --primary-hover: #c2185b;
+    --primary-focus: rgba(216, 27, 96, 0.125);
+    --primary-inverse: #FFF;
+}
+
+
 body {
     min-height: 100vh;
     display: flex;

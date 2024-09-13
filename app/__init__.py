@@ -1,13 +1,23 @@
 import os
 import sqlite3
-from flask import Flask, g, render_template, redirect, request
-from markupsafe import escape
+
+from flask import Flask
+from flask import g
+from flask import render_template
+from flask import redirect
+from flask import request
+from flask import session
+
+from flask_bcrypt import Bcrypt
 
 
 #=======================================================================
 # APP SETUP
 
 app = Flask(__name__)
+
+app.config["SECRET_KEY"] = "THIS IS MY SECRET KEY"
+bcrypt = Bcrypt(app)
 
 
 #=======================================================================
@@ -17,47 +27,122 @@ app = Flask(__name__)
 # Home Page
 @app.get("/")
 
-def helloWorld():
+def hello():
+    name = "Guest"
+    if session.get('name'):
+        name = session['name']
+
     return render_template(
-        "greet.jinja",
-        title = "Hello, World!"
+        "home.jinja",
+        name = name
     )
 
 
 #-------------------------------------------
-# Greeting
-@app.get("/hello/<name>")
+# Sign Up Page
+@app.get("/signup")
 
-def hello(name:str):
-    return render_template(
-        "greet.jinja",
-        title = "Hello, Human!",
-        name = name
-    )
+def sign_up_form():
+    return render_template("signup.jinja")
+
+
+#-------------------------------------------
+# Sign Up Processing
+@app.post("/signup")
+
+def add_user():
+    name     = request.form['name']
+    username = request.form['username']
+    password = request.form['password']
+
+    query = "SELECT * FROM user WHERE username=?"
+    user = db().execute(query, (username,)).fetchone()
+
+    if user:
+        return render_template(
+            "info.jinja",
+            info = f"Account with username '{username}' already exists!"
+        )
+
+    else:
+        query = """
+            INSERT INTO user (name, username, hash)
+            VALUES (?, ?, ?)
+        """
+
+        hash = bcrypt.generate_password_hash(password).decode('utf-8')
+
+        db().execute(query, (name, username, hash))
+
+        return redirect("/login")
+
+
+#-------------------------------------------
+# Login Page
+@app.get("/login")
+
+def login_form():
+    return render_template("login.jinja")
+
+
+#-------------------------------------------
+# Login Processing
+@app.post("/login")
+
+def login_user():
+    username = request.form['username']
+    password = request.form['password']
+
+    query = "SELECT * FROM user WHERE username=?"
+    user = db().execute(query, (username,)).fetchone()
+
+    if user:
+        if bcrypt.check_password_hash(user['hash'], password):
+            session['id']       = user['id']
+            session['username'] = user['username']
+            session['name']     = user['name']
+            return redirect("/")
+
+        else:
+            return render_template(
+                "info.jinja",
+                info = f"Incorrect password"
+            )
+
+    else:
+        return render_template(
+            "info.jinja",
+            info = f"Unknown user '{username}'"
+        )
+
+
+#-------------------------------------------
+# Logout Processing
+@app.get("/logout")
+
+def logout_user():
+    session.clear()
+    return redirect("/")
 
 
 #-------------------------------------------
 # Things Page
 @app.get("/things")
 
-def listThings():
+def list_things():
     query = """
         SELECT  thing.id   AS t_id,
                 thing.name AS t_name,
                 user.name  AS u_name
         FROM thing
         JOIN user ON thing.owner = user.id
+        ORDER BY thing.name ASC
     """
-    thingRecords = db().execute(query).fetchall()
-
-    query = "SELECT * FROM user ORDER BY name ASC"
-    peopleRecords = db().execute(query).fetchall()
+    things = db().execute(query).fetchall()
 
     return render_template(
         "things.jinja",
-        title = "All the Things",
-        things = thingRecords,
-        people = peopleRecords
+        things = things
     )
 
 
@@ -65,7 +150,7 @@ def listThings():
 # New Thing
 @app.post("/thing/new")
 
-def newThing():
+def new_thing():
     query = """
         INSERT INTO thing (name, owner)
         VALUES (?, ?)
@@ -79,53 +164,44 @@ def newThing():
 
 
 #-------------------------------------------
-# People Page
-@app.get("/people")
+# Users Page
+@app.get("/users")
 
-def listPeople():
+def list_users():
     query = "SELECT * FROM user ORDER BY name ASC"
-    peopleRecords = db().execute(query).fetchall()
+    users = db().execute(query).fetchall()
 
     return render_template(
-        "people.jinja",
-        title = "All the People",
-        people = peopleRecords
+        "users.jinja",
+        users = users
     )
 
 
 #-------------------------------------------
-# People Page
-@app.get("/person/<id>")
+# Users Page
+@app.get("/user/<id>")
 
-def showPerson(id:int):
+def show_user(id:int):
     query = "SELECT * FROM user WHERE id=?"
-    personRecord = db().execute(query, (id,)).fetchone()
+    user = db().execute(query, (id,)).fetchone()
 
     query = "SELECT * FROM thing WHERE owner=?"
-    thingRecords = db().execute(query, (id,)).fetchall()
+    things = db().execute(query, (id,)).fetchall()
 
     return render_template(
-        "person.jinja",
-        title = "Person Details",
-        person = personRecord,
-        things = thingRecords
+        "user.jinja",
+        user = user,
+        things = things
     )
 
 
+
 #-------------------------------------------
-# New Person
-@app.post("/person/new")
+# Missing Pages
+@app.errorhandler(404)
 
-def newPerson():
-    query = """
-        INSERT INTO user (name)
-        VALUES (?)
-    """
-    name = request.form['name']
-
-    db().execute(query, (name,))
-
-    return redirect("/people")
+def not_found(e):
+    return render_template("404.jinja")
 
 
 

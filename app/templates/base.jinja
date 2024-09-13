@@ -6,14 +6,19 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>{{ title }}</title>
+	<title>{% block title %}{% endblock %}</title>
+
+    <link
+        rel="icon"
+        href="{{ url_for('static', filename='images/flask.png') }}"
+    >
 
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.fluid.classless.min.css"
     >
-	<link 
-        rel="stylesheet" 
+	<link
+        rel="stylesheet"
         href="{{ url_for('static', filename='css/styles.css') }}"
     >
 </head>
@@ -25,10 +30,24 @@
             <ul>
                 <li><strong><a href="/">Testing</a></strong></li>
             </ul>
+
+            {% if session['name'] %}
+                <ul>
+                    <li>Welcome, {{ session['name'] }}</li>
+                </ul>
+            {% endif %}
+
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/people">People</a></li>
+                <li><a href="/users">People</a></li>
                 <li><a href="/things">Things</a></li>
+
+                {% if session['username'] %}
+                    <li><a href="/logout">Logout</a></li>
+                {% else %}
+                    <li><a href="/signup">Sign Up</a></li>
+                    <li><a href="/login">Login</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

@@ -1,42 +1,47 @@
 {% extends 'base.jinja' %}
 
+
+{% block title %}Things{% endblock %}
+
+
 {% block content %}
 
-    <h1>{{ title }}</h1>
+    <h1>All the Things</h1>
 
     <article>
 
-        <ul>
+        {% if things %}
 
-        {% for thing in things %}
-            <li><strong>{{ thing['t_name'] }}</strong> (owned by {{ thing['u_name'] }})</li>
-        {% endfor %}
+            <ul>
 
-        </ul>
+            {% for thing in things %}
+                <li><strong>{{ thing['t_name'] }}</strong> (owned by {{ thing['u_name'] }})</li>
+            {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>No things, yet!</p>
+
+        {% endif %}
 
     </article>
 
-    <article>
-        <form action="/thing/new" method="post">
+    {% if session['username'] %}
+        <article>
+            <form action="/thing/new" method="post">
 
-            <label>Name</label>
-            <input name="name" type="text" required>
+                <label>Name</label>
+                <input name="name" type="text" required>
 
-            <label>Owner</label>
-            <select name="owner" required>
-                <option value="">Select one...</option>
+                <input name="owner" type="hidden" value="{{ session['id'] }}">
 
-                {% for person in people %}
-                    <option value="{{ person['id'] }}">{{ person['name'] }}</option>
-                {% endfor %}
+                <input type="submit" value="Add Thing">
 
-            </select>
-
-            <input type="submit" value="Add Person">
-
-        </form>
-    </article>
-
+            </form>
+        </article>
+    {% endif %}
 
 {% endblock %}
 

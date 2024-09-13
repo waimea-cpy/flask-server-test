@@ -1,0 +1,22 @@
+{% extends 'base.jinja' %}
+
+
+{% block title %}Info{% endblock %}
+
+
+{% block content %}
+
+    <h1>Hey...</h1>
+
+    {% if info  %}
+
+		<p>{{ info }}!</p>
+
+    {% else %}
+
+        <p>Something Happened!</p>
+
+    {% endif %}
+
+{% endblock %}
+
