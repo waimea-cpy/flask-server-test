@@ -37,10 +37,10 @@ pip install -r requirements.txt
 
 ## Initialising the DB
 
-To setup the DB schema (or to reset the DB), run the `setup.py` script:
+To setup the DB schema (or to reset the DB), run the `init-db` command:
 
 ```Bash
-python app/data/setup.py
+flask init-db
 ```
 
 ## Launching the Server
@@ -59,7 +59,7 @@ flask run --debug
 
 ## Deploying to Railway
 
-Deploying to Railway from this repo with no additional tweaking should 'just work'. 
+Deploying to Railway from this repo with no additional tweaking should 'just work'.
 
 All that is required is to specify tha host address to run on (`0.0.0.0`), and to generate a public URL. In the Railway project settings:
 
@@ -74,7 +74,7 @@ All that is required is to specify tha host address to run on (`0.0.0.0`), and t
 
 #### Networking
 - Select *Generate a Domain* and make sure port is set to **5000** (should be auto-set)
- 
+
 
 
 
