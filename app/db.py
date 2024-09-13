@@ -7,7 +7,7 @@ from flask import current_app, g
 # Retrieve / create DB connection
 def get_db():
     if 'db' not in g:
-        g.db = sqlite3.connect(current_app.config["DATABASE"], autocommit=True)  # Connect to the DB file
+        g.db = sqlite3.connect(current_app.config['DATABASE'], autocommit=True)  # Connect to the DB file
         g.db.row_factory = sqlite3.Row  # Want rows as dicts
     return g.db
 
@@ -16,7 +16,7 @@ def get_db():
 # Recreate the DB from the given schema.sql
 def init_db():
     db = get_db()
-    with current_app.open_resource("data/schema.sql") as f:
+    with current_app.open_resource('data/schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
 
@@ -40,6 +40,7 @@ def init_app(app):
 # Respond to the 'flask init-db' command
 @click.command('init-db')
 def init_db_command():
+    '''Clear the DB and re-initialise the schema.'''
     init_db()
     click.echo('DB cleared and initialised')
 

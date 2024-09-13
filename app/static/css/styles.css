@@ -3,6 +3,9 @@
     --primary-hover: #c2185b;
     --primary-focus: rgba(216, 27, 96, 0.125);
     --primary-inverse: #FFF;
+
+    --alert-text: #51af57;
+    --error-text: #bb5151;
 }
 
 
@@ -14,6 +17,65 @@ body {
 
 main {
     flex: 1;
-    max-width: 80ch;
+    max-width: 90ch;
 }
 
+body > footer {
+    text-align: center;
+}
+
+details {
+    margin-top: 0.7rem;
+}
+
+form {
+    max-width: 30rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#things {
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 2rem;
+}
+
+#things li {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5rem;
+    max-width: 10rem;
+    text-align: center;
+}
+
+#things li img {
+    object-fit: contain;
+    aspect-ratio: 1;
+}
+
+ul.flashes {
+    width: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pico-block-spacing-vertical);
+}
+
+ul.flashes li {
+    color: var(--color);
+    list-style: none;
+    text-align: center;
+}
+
+ul.flashes li.message {
+    --color: var(--alert-text);
+}
+
+ul.flashes li.error {
+    --color: var(--error-text);
+}

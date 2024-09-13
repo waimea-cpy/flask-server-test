@@ -11,6 +11,7 @@ CREATE TABLE user (
 CREATE TABLE thing (
     `id`    INTEGER PRIMARY KEY AUTOINCREMENT,
     `name`  TEXT NOT NULL,
+    `image` TEXT NOT NULL,
     `owner` INTEGER NOT NULL,
     FOREIGN KEY (`owner`) REFERENCES `user` (`id`)
 );

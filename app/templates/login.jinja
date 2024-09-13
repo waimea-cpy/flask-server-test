@@ -6,20 +6,28 @@
 
 {% block content %}
 
-    <h1>Login</h1>
-
     <article>
+        <header>
+            <h1>Login</h1>
+        </header>
+
         <form action="/login" method="post">
 
-            <label>Username</label>
-            <input name="username" type="text" required>
+            <fieldset>
+                <label>Username</label>
+                <input name="username" type="text" required>
 
-            <label>Password</label>
-            <input name="password" type="password" required>
+                <label>Password</label>
+                <input name="password" type="password" required>
+            </fieldset>
 
             <input type="submit" value="Login">
 
         </form>
+
+        <footer>
+            Or, if you don't have an account, <a href="/signup">Sign Up</a>
+        </footer>
     </article>
 
 {% endblock %}

@@ -4,6 +4,7 @@ from flask import request
 from flask import render_template
 from flask import redirect
 from flask import session
+from flask import flash
 
 from flask_bcrypt import Bcrypt
 
@@ -18,15 +19,15 @@ auth = Blueprint('auth', __name__)
 
 #-------------------------------------------
 # Sign Up Page
-@auth.get("/signup")
+@auth.get('/signup')
 
 def sign_up_form():
-    return render_template("signup.jinja")
+    return render_template('signup.jinja')
 
 
 #-------------------------------------------
 # Sign Up Processing
-@auth.post("/signup")
+@auth.post('/signup')
 
 def add_user():
     name     = request.form['name']
@@ -34,47 +35,46 @@ def add_user():
     password = request.form['password']
 
     db = get_db()
-    query = "SELECT * FROM user WHERE username=?"
+    query = 'SELECT * FROM user WHERE username=?'
     user = db.execute(query, (username,)).fetchone()
 
     if user:
-        return render_template(
-            "info.jinja",
-            info = f"Account with username '{username}' already exists!"
-        )
+        flash(f'Existing account with username: <strong>{username}</strong>', 'error')
+        return redirect('/signup')
 
     else:
-        query = """
+        query = '''
             INSERT INTO user (name, username, hash)
             VALUES (?, ?, ?)
-        """
+        '''
 
         bcrypt = Bcrypt(current_app)
         hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
         db.execute(query, (name, username, hash))
 
-        return redirect("/login")
+        flash('Account created. Please login')
+        return redirect('/login')
 
 
 #-------------------------------------------
 # Login Page
-@auth.get("/login")
+@auth.get('/login')
 
 def login_form():
-    return render_template("login.jinja")
+    return render_template('login.jinja')
 
 
 #-------------------------------------------
 # Login Processing
-@auth.post("/login")
+@auth.post('/login')
 
 def login_user():
     username = request.form['username']
     password = request.form['password']
 
     db = get_db()
-    query = "SELECT * FROM user WHERE username=?"
+    query = 'SELECT * FROM user WHERE username=?'
     user = db.execute(query, (username,)).fetchone()
 
     if user:
@@ -84,27 +84,24 @@ def login_user():
             session['id']       = user['id']
             session['username'] = user['username']
             session['name']     = user['name']
-            return redirect("/")
+            return redirect('/')
 
         else:
-            return render_template(
-                "info.jinja",
-                info = f"Incorrect password"
-            )
+            flash('Incorrect password', 'error')
+            return redirect('/login')
 
     else:
-        return render_template(
-            "info.jinja",
-            info = f"Unknown user '{username}'"
-        )
+        flash(f'Unknown username: <strong>{username}</strong>', 'error')
+        return redirect('/login')
+
 
 
 #-------------------------------------------
 # Logout Processing
-@auth.get("/logout")
+@auth.get('/logout')
 
 def logout_user():
     session.clear()
-    return redirect("/")
+    return redirect('/')
 
 

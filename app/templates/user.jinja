@@ -8,24 +8,22 @@
 
     {% if user %}
 
-        <h1>{{ user['name'] }}</h1>
-
         <article>
 
-            <h2>Owns</h2>
+            <header>
+                <h1>{{ user['name'] }}</h1>
+            </header>
+
+            <h4>Owns</h4>
 
             {% if things %}
 
-                <ul>
-
+                <ul id="things">
                 {% for thing in things %}
-
-                    <li>
-                        {{ thing['name'] }}
-                    </li>
-
+                    {% with name=thing['name'], image=thing['image'] %}
+                        {% include 'components/thing.jinja' %}
+                    {% endwith %}
                 {% endfor %}
-
                 </ul>
 
             {% else %}

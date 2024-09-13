@@ -31,19 +31,14 @@
                 <li><strong><a href="/">Testing</a></strong></li>
             </ul>
 
-            {% if session['name'] %}
-                <ul>
-                    <li>Welcome, {{ session['name'] }}</li>
-                </ul>
-            {% endif %}
-
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/users">People</a></li>
+                <li><a href="/users">Users</a></li>
                 <li><a href="/things">Things</a></li>
 
                 {% if session['username'] %}
                     <li><a href="/logout">Logout</a></li>
+                    <li>{{ session['name'] }}</li>
                 {% else %}
                     <li><a href="/signup">Sign Up</a></li>
                     <li><a href="/login">Login</a></li>
@@ -53,6 +48,8 @@
     </header>
 
     <main>
+
+        {% include 'messages.jinja' %}
 
         {% block content %}
         {% endblock %}
