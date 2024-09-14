@@ -35,7 +35,7 @@ def add_user():
     password = request.form['password']
 
     db = get_db()
-    query = 'SELECT * FROM user WHERE username=?'
+    query = 'SELECT * FROM users WHERE username=?'
     user = db.execute(query, (username,)).fetchone()
 
     if user:
@@ -44,7 +44,7 @@ def add_user():
 
     else:
         query = '''
-            INSERT INTO user (name, username, hash)
+            INSERT INTO users (name, username, hash)
             VALUES (?, ?, ?)
         '''
 
@@ -74,7 +74,7 @@ def login_user():
     password = request.form['password']
 
     db = get_db()
-    query = 'SELECT * FROM user WHERE username=?'
+    query = 'SELECT * FROM users WHERE username=? COLLATE NOCASE'
     user = db.execute(query, (username,)).fetchone()
 
     if user:

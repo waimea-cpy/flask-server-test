@@ -2,11 +2,11 @@
 
     {% if messages %}
 
-        <ul id="flashes">
+        <ul id="messages">
 
         {% for category, message in messages %}
 
-            <li class="{{ category }}">{{ message }}</li>
+            <li class="message {{ category }}">{{ message }}</li>
 
         {% endfor %}
 

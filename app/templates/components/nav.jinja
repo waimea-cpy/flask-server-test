@@ -10,7 +10,7 @@
 
         {% if session['username'] %}
             <li><a href="/logout">Logout</a></li>
-            <li>{{ session['name'] }}</li>
+            <li><a href="/profile">{{ session['name'] }}</a></li>
         {% else %}
             <li><a href="/signup">Sign Up</a></li>
             <li><a href="/login">Login</a></li>

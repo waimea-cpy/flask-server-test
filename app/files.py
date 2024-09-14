@@ -13,6 +13,14 @@ def save_file(the_file):
 
 
 #-------------------------------------------
+# Delete a given file from the uploads folder
+def delete_file(filename):
+    uploads = current_app.config['UPLOADS']
+    file_path = os.path.join(uploads, filename)
+    os.remove(file_path)
+
+
+#-------------------------------------------
 # Register 'flask init-files' command and
 def init_app(app):
     app.cli.add_command(init_files_command)

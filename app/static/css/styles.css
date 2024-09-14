@@ -6,6 +6,8 @@
 
     --alert-text: #51af57;
     --error-text: #bb5151;
+    --danger-back: #b82121;
+    --danger-text: #fff;
 }
 
 
@@ -71,6 +73,7 @@ form {
     gap: 0.5rem;
     width: 8rem;
     text-align: center;
+    position: relative;
 }
 
 #thing-list .thing-details img {
@@ -78,7 +81,20 @@ form {
     aspect-ratio: 1 / 1;
 }
 
-#flashes {
+button.delete {
+    padding: 0.1rem;
+    width: 1.2rem;
+    border-radius: 2rem;
+    line-height: 1;
+    background-color: var(--danger-back);
+    color: var(--danger-text);
+    border: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+#messages {
     width: 100%;
     padding: 0;
     display: flex;
@@ -86,16 +102,12 @@ form {
     gap: var(--pico-block-spacing-vertical);
 }
 
-#flashes .message {
-    color: var(--color);
+#messages .message {
+    color: var(--alert-text);
     list-style: none;
     text-align: center;
 }
 
-#flashes .message {
-    --color: var(--alert-text);
-}
-
-#flashes .error {
-    --color: var(--error-text);
+#messages .message.error {
+    color: var(--error-text);
 }

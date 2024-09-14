@@ -6,15 +6,26 @@ from flask import render_template
 from flask import redirect
 from flask import session
 from flask import send_from_directory
+from flask import make_response
 
 from .db import get_db
-from .files import save_file
+from .files import save_file, delete_file
 
 
 #=======================================================================
 # MAIN ROUTES
 
 main = Blueprint('main', __name__)
+
+
+#-------------------------------------------
+# Protect routes that require user to be logged in
+def login_required(func):
+    def secure_function():
+        if 'username' not in session:
+            return redirect('/login')
+        return func()
+    return secure_function
 
 
 #-------------------------------------------
@@ -33,19 +44,33 @@ def hello():
 
 
 #-------------------------------------------
+# User Profile
+@main.route("/profile")
+@login_required
+
+def profile():
+    db = get_db()
+    query = 'SELECT * FROM users WHERE username=?'
+    user = db.execute(query, (session['username'],)).fetchone()
+
+    return render_template('profile.jinja', user=user)
+
+
+#-------------------------------------------
 # Things Page
 @main.get('/things')
 
 def list_things():
     db = get_db()
     query = '''
-        SELECT  thing.id    AS t_id,
-                thing.name  AS t_name,
-                thing.image AS t_image,
-                user.name   AS u_name
-        FROM thing
-        JOIN user ON thing.owner = user.id
-        ORDER BY thing.name ASC
+        SELECT  things.id    AS t_id,
+                things.name  AS t_name,
+                things.image AS t_image,
+                users.id     AS u_id,
+                users.name   AS u_name
+        FROM things
+        JOIN users ON things.owner = users.id
+        ORDER BY things.name ASC
     '''
     things = db.execute(query).fetchall()
 
@@ -67,7 +92,7 @@ def new_thing():
 
     db = get_db()
     query = '''
-        INSERT INTO thing (name, owner, image)
+        INSERT INTO things (name, owner, image)
         VALUES (?, ?, ?)
     '''
     db.execute(query, (name, owner, filename))
@@ -76,12 +101,32 @@ def new_thing():
 
 
 #-------------------------------------------
+# Delete a Thing
+@main.delete('/things/<id>')
+
+def delete_thing(id:int):
+    db = get_db()
+    query = 'SELECT image, owner FROM things WHERE id=?'
+    thing = db.execute(query, (id,)).fetchone()
+
+    # Check that this belongs to the logged in user
+    if session['id'] and thing['owner'] == session['id']:
+        delete_file(thing['image'])
+        query = 'DELETE FROM things WHERE id=?'
+        db.execute(query, (id,))
+        return make_response('', 200)   # Success
+
+    else:
+        return make_response('', 403)   # Forbidden
+
+
+#-------------------------------------------
 # Users Page
 @main.get('/users')
 
 def list_users():
     db = get_db()
-    query = 'SELECT * FROM user ORDER BY name ASC'
+    query = 'SELECT * FROM users ORDER BY name ASC'
     users = db.execute(query).fetchall()
 
     return render_template(
@@ -96,7 +141,7 @@ def list_users():
 
 def show_user(id:int):
     db = get_db()
-    query = 'SELECT * FROM user ORDER BY name ASC'
+    query = 'SELECT * FROM users ORDER BY name ASC'
     users = db.execute(query).fetchall()
 
     return render_template(
@@ -112,12 +157,10 @@ def show_user(id:int):
 
 def user_details(id:int):
     db = get_db()
-    query = 'SELECT * FROM user WHERE id=?'
+    query = 'SELECT * FROM users WHERE id=?'
     user = db.execute(query, (id,)).fetchone()
-    query = 'SELECT * FROM thing WHERE owner=?'
+    query = 'SELECT * FROM things WHERE owner=?'
     things = db.execute(query, (id,)).fetchall()
-
-    htmx = 'HX-Request' in request.headers
 
     return render_template(
         'components/user.jinja',

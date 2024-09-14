@@ -10,7 +10,7 @@
 
             <ul id="thing-list">
             {% for thing in things %}
-                {% with name=thing['name'], image=thing['image'] %}
+                {% with id=thing['id'], name=thing['name'], image=thing['image'], owner=thing['owner'] %}
                     {% include 'components/thing.jinja' %}
                 {% endwith %}
             {% endfor %}

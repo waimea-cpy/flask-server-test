@@ -10,7 +10,16 @@
         >
     {% endif %}
 
-    {% if owner %}
-        <small>Owned by {{ owner }}</small>
+    {% if owner_name %}
+        <small>Owned by {{ owner_name }}</small>
+    {% endif %}
+
+    {% if session['id'] and owner == session['id'] %}
+        <button
+            hx-delete="/things/{{ id }}"
+            class="delete"
+            data-tooltip="Delete this thing"
+            hx-confirm="Really delete this thing?"
+        >×</button>
     {% endif %}
 </li>

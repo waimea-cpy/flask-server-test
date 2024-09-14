@@ -1,0 +1,26 @@
+{% extends 'base.jinja' %}
+
+
+{% block title %}Profile{% endblock %}
+
+
+{% block content %}
+
+    <section id="user">
+
+        <article>
+
+            <header>
+                <h1>{{ user['name'] }}'s Profile</h1>
+            </header>
+
+            <p>Name: <strong>{{ user['name'] }}</strong></p>
+
+            <p>Username: <strong>{{ user['username'] }}</strong></p>
+
+        </article>
+
+    </section>
+
+{% endblock %}
+
