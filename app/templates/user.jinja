@@ -8,31 +8,7 @@
 
     {% if user %}
 
-        <article>
-
-            <header>
-                <h1>{{ user['name'] }}</h1>
-            </header>
-
-            <h4>Owns</h4>
-
-            {% if things %}
-
-                <ul id="things">
-                {% for thing in things %}
-                    {% with name=thing['name'], image=thing['image'] %}
-                        {% include 'components/thing.jinja' %}
-                    {% endwith %}
-                {% endfor %}
-                </ul>
-
-            {% else %}
-
-                <p>Nothing!</p>
-
-            {% endif %}
-
-        </article>
+        {% include 'components/user.jinja' %}
 
     {% else %}
 

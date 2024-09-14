@@ -2,7 +2,10 @@
 # Required packages to install via pip when deploying to Railway
 #----------------------------------------------------------------
 
+# Flask framework
 Flask
+# BCrypt for password hashing
 flask-bcrypt
+# Utility tools
 Werkzeug
 

@@ -1,5 +1,4 @@
-import os
-
+import pprint
 from flask import Blueprint
 from flask import current_app
 from flask import request
@@ -104,11 +103,20 @@ def show_user(id:int):
     query = 'SELECT * FROM thing WHERE owner=?'
     things = db.execute(query, (id,)).fetchall()
 
-    return render_template(
-        'user.jinja',
-        user = user,
-        things = things
-    )
+    htmx = 'HX-Request' in request.headers
+
+    if htmx:
+        return render_template(
+            'components/user.jinja',
+            user = user,
+            things = things
+        )
+    else:
+        return render_template(
+            'user.jinja',
+            user = user,
+            things = things
+        )
 
 
 #-------------------------------------------

@@ -17,10 +17,12 @@
             <ul>
 
             {% for user in users %}
-                <li>
-                    <a href="/user/{{ user['id'] }}">
-                        {{ user['name'] }}
-                    </a>
+                <li
+                    hx-get="/user/{{ user['id'] }}"
+                    hx-target="#user-details"
+                    hx-swap="outerHTML"
+                >
+                    {{ user['name'] }}
                 </li>
             {% endfor %}
 
@@ -32,6 +34,10 @@
 
         {% endif %}
 
+    </article>
+
+    <article id="user-details">
+        Select a user...
     </article>
 
 {% endblock %}
