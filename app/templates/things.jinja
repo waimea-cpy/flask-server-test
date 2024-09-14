@@ -14,7 +14,7 @@
 
         {% if things %}
 
-            <ul id="things">
+            <ul id="thing-list">
             {% for thing in things %}
                 {% with name=thing['t_name'], image=thing['t_image'], owner=thing['u_name'] %}
                     {% include 'components/thing.jinja' %}

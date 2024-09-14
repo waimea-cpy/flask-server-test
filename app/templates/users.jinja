@@ -6,39 +6,60 @@
 
 {% block content %}
 
-    <article>
+    <section id="user">
 
-        <header>
-            <h1>All the Users</h1>
-        </header>
+        <article>
 
-        {% if users %}
+            <header>
+                <h1>All the Users</h1>
+            </header>
 
-            <ul>
+            {% if users %}
 
-            {% for user in users %}
-                <li
-                    hx-get="/user/{{ user['id'] }}"
-                    hx-target="#user-details"
-                    hx-swap="outerHTML"
-                >
-                    {{ user['name'] }}
-                </li>
-            {% endfor %}
+                <ul id="user-list">
 
-            </ul>
+                {% for user in users %}
+                    <li
+                        hx-get="/users/{{ user['id'] }}/details"
+                        hx-target="#user-details"
+                        hx-swap="outerHTML"
+                        hx-push-url="/users/{{ user['id'] }}"
+                        role="button"
+                    >
+                        {{ user['name'] }}
+                    </li>
+                {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>No users, yet!</p>
+
+            {% endif %}
+
+        </article>
+
+        {% if user_id %}
+
+            <article
+                id="user-details"
+                hx-get="/users/{{ user_id }}/details"
+                hx-swap="outerHTML"
+                hx-trigger="load"
+            >
+                Loading...
+            </article>
 
         {% else %}
 
-            <p>No users, yet!</p>
+            <article id="user-details">
+                Select a user...
+            </article>
 
         {% endif %}
 
-    </article>
-
-    <article id="user-details">
-        Select a user...
-    </article>
+    </section>
 
 {% endblock %}
 

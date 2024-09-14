@@ -57,7 +57,7 @@ def list_things():
 
 #-------------------------------------------
 # New Thing
-@main.post('/thing/new')
+@main.post('/things/new')
 
 def new_thing():
     name  = request.form['name']
@@ -92,31 +92,38 @@ def list_users():
 
 #-------------------------------------------
 # Users Page
-@main.get('/user/<id>')
+@main.get('/users/<id>')
 
 def show_user(id:int):
     db = get_db()
+    query = 'SELECT * FROM user ORDER BY name ASC'
+    users = db.execute(query).fetchall()
 
+    return render_template(
+        'users.jinja',
+        users = users,
+        user_id = id
+    )
+
+
+#-------------------------------------------
+# Users Page
+@main.get('/users/<id>/details')
+
+def user_details(id:int):
+    db = get_db()
     query = 'SELECT * FROM user WHERE id=?'
     user = db.execute(query, (id,)).fetchone()
-
     query = 'SELECT * FROM thing WHERE owner=?'
     things = db.execute(query, (id,)).fetchall()
 
     htmx = 'HX-Request' in request.headers
 
-    if htmx:
-        return render_template(
-            'components/user.jinja',
-            user = user,
-            things = things
-        )
-    else:
-        return render_template(
-            'user.jinja',
-            user = user,
-            things = things
-        )
+    return render_template(
+        'components/user.jinja',
+        user = user,
+        things = things
+    )
 
 
 #-------------------------------------------

@@ -9,53 +9,22 @@
 	<title>{% block title %}{% endblock %}</title>
 
     <script src="https://unpkg.com/htmx.org@2"></script>
-
-    <link
-        rel="icon"
-        href="{{ url_for('static', filename='images/flask.png') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.fluid.classless.min.css"
-    >
-	<link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/styles.css') }}"
-    >
+    <link rel="icon" href="{{ url_for('static', filename='images/flask.png') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.fluid.classless.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body hx-boost="true">
 
     <header>
-        <nav>
-            <ul>
-                <li><strong><a href="/">Testing</a></strong></li>
-            </ul>
-
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/users">Users</a></li>
-                <li><a href="/things">Things</a></li>
-
-                {% if session['username'] %}
-                    <li><a href="/logout">Logout</a></li>
-                    <li>{{ session['name'] }}</li>
-                {% else %}
-                    <li><a href="/signup">Sign Up</a></li>
-                    <li><a href="/login">Login</a></li>
-                {% endif %}
-            </ul>
-        </nav>
+        {% include 'components/nav.jinja' %}
     </header>
 
     <main>
-
-        {% include 'messages.jinja' %}
+        {% include 'components/messages.jinja' %}
 
         {% block content %}
         {% endblock %}
-
     </main>
 
     <footer>
