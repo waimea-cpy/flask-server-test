@@ -1,15 +1,13 @@
 :root {
-    --primary: #d81b60;
-    --primary-hover: #c2185b;
-    --primary-focus: rgba(216, 27, 96, 0.125);
-    --primary-inverse: #FFF;
-
     --alert-text: #51af57;
     --error-text: #bb5151;
     --danger-back: #b82121;
     --danger-text: #fff;
 }
 
+/**********************************************
+GENERAL LAYOUT
+*/
 
 body {
     min-height: 100vh;
@@ -37,6 +35,10 @@ form {
 }
 
 
+/**********************************************
+USER PAGES
+*/
+
 #user {
     width: 100%;
     display: flex;
@@ -55,6 +57,10 @@ form {
 #user-list li {
     list-style: none;
 }
+
+/**********************************************
+THINGS PAGES
+*/
 
 #thing-list {
     padding: 0;
@@ -93,6 +99,11 @@ button.delete {
     right: 0;
     bottom: 0;
 }
+
+
+/**********************************************
+FLASH MESSAGES
+*/
 
 #messages {
     width: 100%;

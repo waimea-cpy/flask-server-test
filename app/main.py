@@ -1,54 +1,59 @@
-import pprint
+'''
+MAIN APP ROUTES
+'''
+
+
 from flask import Blueprint
-from flask import current_app
 from flask import request
 from flask import render_template
 from flask import redirect
 from flask import session
-from flask import send_from_directory
 from flask import make_response
 
 from .db import get_db
-from .files import save_file, delete_file
+from .files import save_file, get_file, delete_file
 
-
-#=======================================================================
-# MAIN ROUTES
 
 main = Blueprint('main', __name__)
 
 
-#-------------------------------------------
-# Protect routes that require user to be logged in
+#-------------------------------------------------------
 def login_required(func):
+    '''
+    Protect routes that require user to be logged in
+    '''
     def secure_function():
+        # Session info exists?
         if 'username' not in session:
+            # No, so prompt to login
             return redirect('/login')
         return func()
     return secure_function
 
 
-#-------------------------------------------
-# Home Page
+#-------------------------------------------------------
 @main.get('/')
 
 def hello():
+    '''
+    Home page
+    '''
     name = 'Guest'
     if 'name' in session:
         name = session['name']
 
-    return render_template(
-        'home.jinja',
-        name = name
-    )
+    return render_template('home.jinja', name=name)
 
 
-#-------------------------------------------
-# User Profile
+#-------------------------------------------------------
 @main.route("/profile")
 @login_required
 
 def profile():
+    '''
+    User profile page
+    '''
+    # Get the logged-in user's details
     db = get_db()
     query = 'SELECT * FROM users WHERE username=?'
     user = db.execute(query, (session['username'],)).fetchone()
@@ -56,11 +61,14 @@ def profile():
     return render_template('profile.jinja', user=user)
 
 
-#-------------------------------------------
-# Things Page
+#-------------------------------------------------------
 @main.get('/things')
 
 def list_things():
+    '''
+    Things page
+    '''
+    # Get thing details, including owner info
     db = get_db()
     query = '''
         SELECT  things.id    AS t_id,
@@ -74,91 +82,98 @@ def list_things():
     '''
     things = db.execute(query).fetchall()
 
-    return render_template(
-        'things.jinja',
-        things = things
-    )
+    return render_template('things.jinja', things=things)
 
 
-#-------------------------------------------
-# New Thing
+#-------------------------------------------------------
 @main.post('/things/new')
 
 def new_thing():
+    '''
+    New thing processing
+    '''
+    # Get form data
     name  = request.form['name']
     owner = request.form['owner']
+    # And the uploaded image
     image = request.files['image']
+    # Save the image, getting back the filename
     filename = save_file(image)
-
+    # Add the item to the DB
     db = get_db()
-    query = '''
-        INSERT INTO things (name, owner, image)
-        VALUES (?, ?, ?)
-    '''
+    query = 'INSERT INTO things (name, owner, image) VALUES (?, ?, ?)'
     db.execute(query, (name, owner, filename))
 
     return redirect('/things')
 
 
-#-------------------------------------------
-# Delete a Thing
+#-------------------------------------------------------
 @main.delete('/things/<id>')
 
 def delete_thing(id:int):
+    '''
+    Delete a Thing
+    '''
+    # Get info about the thing to delete
     db = get_db()
     query = 'SELECT image, owner FROM things WHERE id=?'
     thing = db.execute(query, (id,)).fetchone()
 
     # Check that this belongs to the logged in user
     if session['id'] and thing['owner'] == session['id']:
+        # Yep, so remove the associated file
         delete_file(thing['image'])
+        # And delete the DB record
         query = 'DELETE FROM things WHERE id=?'
         db.execute(query, (id,))
+
         return make_response('', 200)   # Success
 
     else:
+        # Should not be deleting
         return make_response('', 403)   # Forbidden
 
 
-#-------------------------------------------
-# Users Page
+#-------------------------------------------------------
 @main.get('/users')
 
 def list_users():
+    '''
+    All users page
+    '''
     db = get_db()
     query = 'SELECT * FROM users ORDER BY name ASC'
     users = db.execute(query).fetchall()
 
-    return render_template(
-        'users.jinja',
-        users = users
-    )
+    return render_template('users.jinja', users=users)
 
 
-#-------------------------------------------
-# Users Page
+#-------------------------------------------------------
 @main.get('/users/<id>')
 
 def show_user(id:int):
+    '''
+    Users page, but with specific user focused
+    '''
     db = get_db()
     query = 'SELECT * FROM users ORDER BY name ASC'
     users = db.execute(query).fetchall()
 
-    return render_template(
-        'users.jinja',
-        users = users,
-        user_id = id
-    )
+    return render_template('users.jinja', users=users, user_id=id)
 
 
-#-------------------------------------------
-# Users Page
+#-------------------------------------------------------
 @main.get('/users/<id>/details')
 
 def user_details(id:int):
+    '''
+    User details component from HTMX request
+    '''
     db = get_db()
+    # Get user info
     query = 'SELECT * FROM users WHERE id=?'
     user = db.execute(query, (id,)).fetchone()
+    # And list of owned things
     query = 'SELECT * FROM things WHERE owner=?'
     things = db.execute(query, (id,)).fetchall()
 
@@ -169,19 +184,23 @@ def user_details(id:int):
     )
 
 
-#-------------------------------------------
-# Uploaded File Route (for images)
+#-------------------------------------------------------
 @main.get('/uploads/<filename>')
 
 def uploaded_file(filename):
-    return send_from_directory(current_app.config['UPLOADS'], filename)
+    '''
+    Uploaded File Route (for thing images)
+    '''
+    return get_file(filename)
 
 
-#-------------------------------------------
-# Missing Pages
+#-------------------------------------------------------
 @main.errorhandler(404)
 
 def not_found(e):
+    '''
+    Missing resource page
+    '''
     return render_template('404.jinja')
 
 

@@ -1,3 +1,10 @@
+{#
+Things list page
+Uses the thing component, setting data values based on
+the multi-table query, giving thing and owner info.
+If a user is logged in, also shows a form to add a thing
+#}
+
 {% extends 'base.jinja' %}
 
 
@@ -15,11 +22,15 @@
         {% if things %}
 
             <ul id="thing-list">
-            {% for thing in things %}
-                {% with id=thing['t_id'], name=thing['t_name'], image=thing['t_image'], owner=thing['u_id'], owner_name=thing['u_name'] %}
-                    {% include 'components/thing.jinja' %}
-                {% endwith %}
-            {% endfor %}
+
+                {% for thing in things %}
+
+                    {% with id=thing['t_id'], name=thing['t_name'], image=thing['t_image'], owner=thing['u_id'], owner_name=thing['u_name'] %}
+                        {% include 'components/thing.jinja' %}
+                    {% endwith %}
+
+                {% endfor %}
+
             </ul>
 
         {% else %}
@@ -28,31 +39,19 @@
 
         {% endif %}
 
+
         {% if session['username'] %}
+
             <footer>
                 <details>
+
                     <summary>Add a Thing</summary>
 
-                    <form action="/things/new" method="post" enctype="multipart/form-data">
+                    {% include 'components/thing-form.jinja' %}
 
-                        <label>Name</label>
-                        <input name="name" type="text" required>
-
-                        <label>Image</label>
-                        <input
-                            name="image"
-                            type="file"
-                            accept="image/png, image/jpeg, image/gif, image/webp"
-                            required
-                        >
-
-                        <input name="owner" type="hidden" value="{{ session['id'] }}">
-
-                        <input type="submit" value="Add Thing">
-
-                    </form>
                 </details>
             </footer>
+
         {% endif %}
 
     </article>

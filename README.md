@@ -35,12 +35,13 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Initialising the DB
+## Initialising the DB and Uploads Folder
 
-To setup the DB schema (or to reset the DB), run the `init-db` command:
+To setup the DB schema (or to reset the DB) and/or clear out the uploads folder, run the `init-db` and `init-files` commands:
 
 ```Bash
 flask init-db
+flask init-files
 ```
 
 ## Launching the Server

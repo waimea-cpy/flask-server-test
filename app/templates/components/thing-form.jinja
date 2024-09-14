@@ -1,0 +1,23 @@
+{#
+Component for a new thing form
+#}
+
+<form action="/things/new" method="post" enctype="multipart/form-data">
+
+    <label>Name</label>
+    <input name="name" type="text" required>
+
+    <label>Image</label>
+    <input
+        name="image"
+        type="file"
+        accept="image/png, image/jpeg, image/gif, image/webp"
+        required
+    >
+
+    <input name="owner" type="hidden" value="{{ session['id'] }}">
+
+    <input type="submit" value="Add Thing">
+
+</form>
+

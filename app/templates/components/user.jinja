@@ -1,3 +1,9 @@
+{#
+Component to display a user's details
+including the things they own, using the
+thing component with appropriate data values
+#}
+
 <article id="user-details">
 
     {% if user %}
@@ -9,11 +15,15 @@
         {% if things %}
 
             <ul id="thing-list">
-            {% for thing in things %}
-                {% with id=thing['id'], name=thing['name'], image=thing['image'], owner=thing['owner'] %}
-                    {% include 'components/thing.jinja' %}
-                {% endwith %}
-            {% endfor %}
+
+                {% for thing in things %}
+
+                    {% with id=thing['id'], name=thing['name'], image=thing['image'], owner=thing['owner'] %}
+                        {% include 'components/thing.jinja' %}
+                    {% endwith %}
+
+                {% endfor %}
+
             </ul>
 
         {% else %}

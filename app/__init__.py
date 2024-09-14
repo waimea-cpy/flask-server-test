@@ -1,17 +1,23 @@
-import os
+'''
+APP CONFIGURATION AND SETUP
+'''
+
 from flask import Flask
 
 
-#=======================================================================
-# APP SETUP
-
 def create_app():
+    '''
+    Setup the app with appropriate configuration
+    and initialise other modules as needed
+    '''
+
     app = Flask(__name__)
 
     # Configuration
-    app.config['SECRET_KEY'] = 'THIS IS MY SECRET KEY'
-    app.config['DATABASE'] = os.path.join(app.root_path, 'data/data.db')
-    app.config['UPLOADS']  = os.path.join(app.root_path, 'uploads')
+    app.config['SECRET_KEY']  = 'THIS IS MY SECRET KEY'
+    app.config['DB_FILE']     = 'data.db'
+    app.config['DB_SCHEMA']   = 'schema.sql'
+    app.config['UPLOADS_DIR'] = 'uploads'
 
     # Routing blueprints
     from .main import main as main_blueprint

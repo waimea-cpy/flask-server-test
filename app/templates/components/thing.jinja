@@ -1,25 +1,42 @@
+{#
+Component to display a thing
+Various data values define what will be shown
+If logged in user owns the thing, they get a
+delete link too
+#}
+
 <li class="thing-details">
+
     {% if name %}
+
         <h4>{{ name }}</h4>
+
     {% endif %}
+
 
     {% if image %}
-        <img
-            src="/uploads/{{ image }}"
-            alt="Image of {{ name }}"
-        >
+
+        <img src="/uploads/{{ image }}" alt="Image of {{ name }}">
+
     {% endif %}
+
 
     {% if owner_name %}
+
         <small>Owned by {{ owner_name }}</small>
+
     {% endif %}
 
+
     {% if session['id'] and owner == session['id'] %}
+
         <button
             hx-delete="/things/{{ id }}"
             class="delete"
             data-tooltip="Delete this thing"
             hx-confirm="Really delete this thing?"
         >×</button>
+
     {% endif %}
+
 </li>

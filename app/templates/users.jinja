@@ -1,3 +1,12 @@
+{#
+Users page
+Shows a list of all users in first panel
+user names trigger HTMX requests for user info.
+Second panel will be populated with a user's info
+via the user component if an id is passed in, or
+a message otherwise
+#}
+
 {% extends 'base.jinja' %}
 
 
@@ -18,17 +27,19 @@
 
                 <ul id="user-list">
 
-                {% for user in users %}
-                    <li
-                        hx-get="/users/{{ user['id'] }}/details"
-                        hx-target="#user-details"
-                        hx-swap="outerHTML"
-                        hx-push-url="/users/{{ user['id'] }}"
-                        role="button"
-                    >
-                        {{ user['name'] }}
-                    </li>
-                {% endfor %}
+                    {% for user in users %}
+
+                        <li
+                            hx-get="/users/{{ user['id'] }}/details"
+                            hx-target="#user-details"
+                            hx-swap="outerHTML"
+                            hx-push-url="/users/{{ user['id'] }}"
+                            role="button"
+                        >
+                            {{ user['name'] }}
+                        </li>
+
+                    {% endfor %}
 
                 </ul>
 
@@ -39,6 +50,7 @@
             {% endif %}
 
         </article>
+
 
         {% if user_id %}
 
