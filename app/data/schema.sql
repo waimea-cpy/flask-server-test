@@ -13,6 +13,6 @@ CREATE TABLE things (
     `name`  TEXT NOT NULL,
     `image` TEXT NOT NULL,
     `owner` INTEGER NOT NULL,
-    FOREIGN KEY (`owner`) REFERENCES `users` (`id`)
+    FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

@@ -7,7 +7,7 @@ via the user component if an id is passed in, or
 a message otherwise
 #}
 
-{% extends 'base.jinja' %}
+{% extends 'pages/base.jinja' %}
 
 
 {% block title %}Users{% endblock %}
@@ -37,6 +37,20 @@ a message otherwise
                             role="button"
                         >
                             {{ user['name'] }}
+
+                            {% if session['id'] and user['id'] == session['id'] %}
+
+                                <button
+                                    hx-delete="/users/{{ user['id'] }}"
+                                    class="delete"
+                                    data-tooltip="Delete this user account"
+                                    hx-confirm="Really delete this user account?"
+                                    hx-target="closest li"
+                                    hx-swap="outerHTML"
+                                >×</button>
+
+                            {% endif %}
+
                         </li>
 
                     {% endfor %}
@@ -52,11 +66,11 @@ a message otherwise
         </article>
 
 
-        {% if user_id %}
+        {% if focus_user %}
 
             <article
                 id="user-details"
-                hx-get="/users/{{ user_id }}/details"
+                hx-get="/users/{{ focus_user }}/details"
                 hx-swap="outerHTML"
                 hx-trigger="load"
             >

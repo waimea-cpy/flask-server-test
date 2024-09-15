@@ -42,7 +42,10 @@ def hello():
     if 'name' in session:
         name = session['name']
 
-    return render_template('home.jinja', name=name)
+    return render_template(
+        'pages/home.jinja',
+        name=name
+    )
 
 
 #-------------------------------------------------------
@@ -58,7 +61,10 @@ def profile():
     query = 'SELECT * FROM users WHERE username=?'
     user = db.execute(query, (session['username'],)).fetchone()
 
-    return render_template('profile.jinja', user=user)
+    return render_template(
+        'pages/profile.jinja',
+        user=user
+    )
 
 
 #-------------------------------------------------------
@@ -82,7 +88,10 @@ def list_things():
     '''
     things = db.execute(query).fetchall()
 
-    return render_template('things.jinja', things=things)
+    return render_template(
+        'pages/things.jinja',
+        things=things
+    )
 
 
 #-------------------------------------------------------
@@ -145,7 +154,10 @@ def list_users():
     query = 'SELECT * FROM users ORDER BY name ASC'
     users = db.execute(query).fetchall()
 
-    return render_template('users.jinja', users=users)
+    return render_template(
+        'pages/users.jinja',
+        users=users
+    )
 
 
 #-------------------------------------------------------
@@ -159,7 +171,11 @@ def show_user(id:int):
     query = 'SELECT * FROM users ORDER BY name ASC'
     users = db.execute(query).fetchall()
 
-    return render_template('users.jinja', users=users, user_id=id)
+    return render_template(
+        'pages/users.jinja',
+        users=users,
+        focus_user=id
+    )
 
 
 #-------------------------------------------------------
@@ -185,6 +201,29 @@ def user_details(id:int):
 
 
 #-------------------------------------------------------
+@main.delete('/users/<id>')
+
+def delete_user(id:int):
+    '''
+    Delete a User
+    '''
+    # Check that this is the logged in user
+    if session['id'] and int(id) == session['id']:
+        # Delete the DB record
+        db = get_db()
+        query = 'DELETE FROM users WHERE id=?'
+        db.execute(query, (id,))
+        # Clear the session (login info)
+        session.clear()
+        # Return success (200)
+        return make_response('', 200)
+
+    else:
+        # Should not be deleting, forbidden (403)
+        return make_response('', 403)
+
+
+#-------------------------------------------------------
 @main.get('/uploads/<filename>')
 
 def uploaded_file(filename):
@@ -201,7 +240,7 @@ def not_found(e):
     '''
     Missing resource page
     '''
-    return render_template('404.jinja')
+    return render_template('pages/404.jinja')
 
 
 

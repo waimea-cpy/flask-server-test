@@ -26,7 +26,7 @@ def sign_up_form():
     '''
     Sign-up page
     '''
-    return render_template('signup.jinja')
+    return render_template('pages/signup.jinja')
 
 
 #-------------------------------------------------------
@@ -69,7 +69,7 @@ def login_form():
     '''
     Login page
     '''
-    return render_template('login.jinja')
+    return render_template('pages/login.jinja')
 
 
 #-------------------------------------------------------
