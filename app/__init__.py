@@ -19,6 +19,9 @@ def create_app():
     app.config['DB_SCHEMA']   = 'schema.sql'
     app.config['UPLOADS_DIR'] = 'uploads'
 
+    # Prevent cookies being retained after browser close
+    app.config["SESSION_PERMANENT"] = False
+
     # Routing blueprints
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)

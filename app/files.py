@@ -25,6 +25,18 @@ def uploads_path():
 
 
 #-------------------------------------------------------
+def init_files():
+    '''
+    Clear out all files in the uploads folder
+    '''
+    uploads = uploads_path()
+    # Iterate through the folder
+    for filename in os.listdir(uploads):
+        # Deleting the files
+        os.remove(os.path.join(uploads, filename))
+
+
+#-------------------------------------------------------
 def save_file(the_file):
     '''
     Save an uploaded file to the uploads folder
@@ -67,11 +79,7 @@ def init_files_command():
     '''
     Delete all files in the uploads folder.
     '''
-    uploads = uploads_path()
-    # Iterate through the folder
-    for filename in os.listdir(uploads):
-        # Deleting the files
-        os.remove(os.path.join(uploads, filename))
+    init_files()
     click.echo('Uploads cleared')
 
 
