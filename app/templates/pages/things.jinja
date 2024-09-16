@@ -25,8 +25,16 @@ If a user is logged in, also shows a form to add a thing
 
                 {% for thing in things %}
 
-                    {% with id=thing['t_id'], name=thing['t_name'], image=thing['t_image'], owner=thing['u_id'], owner_name=thing['u_name'] %}
+                    {% with
+                        id=thing['t_id'],
+                        name=thing['t_name'],
+                        image=thing['t_image'],
+                        owner=thing['u_id'],
+                        owner_name=thing['u_name']
+                    %}
+
                         {% include 'components/thing.jinja' %}
+
                     {% endwith %}
 
                 {% endfor %}

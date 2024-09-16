@@ -216,7 +216,10 @@ def delete_user(id:int):
         # Clear the session (login info)
         session.clear()
         # Return success (200)
-        return make_response('', 200)
+        response = make_response('', 200)
+        # Client redirect via HTMX to reload page
+        response.headers['HX-Redirect'] = '/users'
+        return response
 
     else:
         # Should not be deleting, forbidden (403)

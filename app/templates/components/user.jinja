@@ -18,7 +18,11 @@ thing component with appropriate data values
 
                 {% for thing in things %}
 
-                    {% with id=thing['id'], name=thing['name'], image=thing['image'], owner=thing['owner'] %}
+                    {% with id=thing['id'],
+                            name=thing['name'],
+                            image=thing['image'],
+                            owner=thing['owner']
+                    %}
                         {% include 'components/thing.jinja' %}
                     {% endwith %}
 

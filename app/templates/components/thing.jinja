@@ -16,7 +16,10 @@ delete link too
 
     {% if image %}
 
-        <img src="/uploads/{{ image }}" alt="Image of {{ name }}">
+        <img
+            src="/uploads/{{ image }}"
+            alt="Image of {{ name }}"
+        >
 
     {% endif %}
 
@@ -35,6 +38,8 @@ delete link too
             class="delete"
             data-tooltip="Delete this thing"
             hx-confirm="Really delete this thing?"
+            hx-target="closest li"
+            hx-swap="outerHTML"
         >×</button>
 
     {% endif %}
