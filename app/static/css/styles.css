@@ -1,34 +1,21 @@
 :root {
     --alert-text: #51af57;
     --error-text: #bb5151;
-    --danger-back: #b82121;
+    --danger-back: #cd1c1c;
     --danger-text: #fff;
+    --thing-back: #7771;
 }
+
 
 /**********************************************
 GENERAL LAYOUT
 */
 
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-main {
-    flex: 1;
-    max-width: 60rem;
-}
-
-body > footer {
-    text-align: center;
-}
-
 details {
     margin-top: 0.7rem;
 }
 
-form {
+article:has(form) {
     max-width: 30rem;
     margin-left: auto;
     margin-right: auto;
@@ -41,13 +28,16 @@ USER PAGES
 
 #user {
     width: 100%;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 2rem;
-    align-items: flex-start;
+    align-items: start;
 }
 
-#user > :last-child {
-    flex: 1;
+@media screen and (min-width: 50rem) {
+    #user {
+        grid-template-columns: 12rem 1fr;
+    }
 }
 
 #user-list {
@@ -74,14 +64,10 @@ THINGS PAGES
 
 #thing-list .thing-details {
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 0.5rem;
-    width: 8rem;
+    width: 10rem;
     text-align: center;
     position: relative;
-    background-color: var(--pico-card-sectioning-background-color);
+    background-color: var(--thing-back);
     padding: 0.5rem;
     border-radius: 0.25rem;
 }
@@ -100,8 +86,8 @@ button.delete {
     color: var(--danger-text);
     border: none;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: -0.4rem;
+    top: -0.2rem;
 }
 
 

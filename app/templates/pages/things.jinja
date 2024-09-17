@@ -47,22 +47,22 @@ If a user is logged in, also shows a form to add a thing
 
         {% endif %}
 
-
-        {% if session['username'] %}
-
-            <footer>
-                <details>
-
-                    <summary>Add a Thing</summary>
-
-                    {% include 'components/thing-form.jinja' %}
-
-                </details>
-            </footer>
-
-        {% endif %}
-
     </article>
+
+    {% if session['username'] %}
+
+        <article>
+            <details>
+
+                <summary>Add a Thing</summary>
+
+                {% include 'components/thing-form.jinja' %}
+
+            </details>
+        </article>
+
+    {% endif %}
+
 
 {% endblock %}
 
