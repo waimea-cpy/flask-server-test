@@ -36,7 +36,7 @@ USER PAGES
 
 @media screen and (min-width: 50rem) {
     #user {
-        grid-template-columns: 12rem 1fr;
+        grid-template-columns: 15rem 1fr;
     }
 }
 
@@ -70,6 +70,9 @@ THINGS PAGES
     background-color: var(--thing-back);
     padding: 0.5rem;
     border-radius: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 #thing-list .thing-details img {
