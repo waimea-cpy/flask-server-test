@@ -13,10 +13,10 @@ Loads HTMX and PicoCSS, along with app stylesheet
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<title>{% block title %}{% endblock %}</title>
-    <link rel="icon" href="{{ url_for('static', filename='images/flask.png') }}">
+    <link rel="icon" href="/static/images/flask.png">
 
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="/static/css/styles.css">
 
     <script src="https://unpkg.com/htmx.org@2"></script>
 </head>

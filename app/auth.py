@@ -20,6 +20,20 @@ auth = Blueprint('auth', __name__)
 
 
 #-------------------------------------------------------
+def login_required(func):
+    '''
+    Protect routes that require user to be logged in
+    '''
+    def secure_function():
+        # Session info exists?
+        if 'username' not in session:
+            # No, so prompt to login
+            return redirect('/login')
+        return func()
+    return secure_function
+
+
+#-------------------------------------------------------
 @auth.get('/signup')
 
 def sign_up_form():

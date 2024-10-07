@@ -12,23 +12,10 @@ from flask import make_response
 
 from .db import get_db
 from .files import save_file, get_file, delete_file
+from .auth import login_required
 
 
 main = Blueprint('main', __name__)
-
-
-#-------------------------------------------------------
-def login_required(func):
-    '''
-    Protect routes that require user to be logged in
-    '''
-    def secure_function():
-        # Session info exists?
-        if 'username' not in session:
-            # No, so prompt to login
-            return redirect('/login')
-        return func()
-    return secure_function
 
 
 #-------------------------------------------------------
