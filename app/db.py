@@ -1,8 +1,8 @@
 """
 SQLITE DATABASE RELATED FUNCTIONS
-- Connecting
-- Initialising
-- Closing
+ - Connecting
+ - Initialising
+ - Closing
 """
 
 import os
@@ -16,6 +16,7 @@ def get_db():
     """
     Retrieve / create DB connection
     """
+
     # Are we already connected to the DB?
     if "db" not in g:
         # Connect to the DB file and save connection in flask global store
@@ -34,6 +35,7 @@ def init_db():
     """
     Recreate the DB from the given schema.sql
     """
+
     db = get_db()
     # Open and read the schema file
     schema_path = os.path.join("data", current_app.config["DB_SCHEMA"])
@@ -47,6 +49,7 @@ def close_db(e=None):
     """
     Close any open DB connection
     """
+
     # Get the saved connection from the global store
     db = g.pop("db", None)
     if db is not None:
@@ -59,6 +62,7 @@ def init_app(app):
     Register 'flask init-db' command and
     define the teardown action when app completes
     """
+
     # Register the init command
     app.cli.add_command(init_db_command)
     # Define the teardown process for the DB
@@ -72,5 +76,6 @@ def init_db_command():
     """
     Clear the DB and re-initialise the schema.
     """
+
     init_db()
     click.echo("DB cleared and initialised")

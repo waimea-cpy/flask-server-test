@@ -23,6 +23,7 @@ def hello():
     """
     Home page
     """
+
     name = "Guest"
     if "name" in session:
         name = session["name"]
@@ -37,6 +38,7 @@ def profile():
     """
     User profile page
     """
+
     # Get the logged-in user's details
     db = get_db()
     query = "SELECT * FROM users WHERE username=?"
@@ -51,6 +53,7 @@ def list_things():
     """
     Things page
     """
+
     # Get thing details, including owner info
     db = get_db()
     query = """
@@ -74,6 +77,7 @@ def new_thing():
     """
     New thing processing
     """
+
     # Get form data
     name = request.form["name"]
     owner = request.form["owner"]
@@ -95,6 +99,7 @@ def delete_thing(id: int):
     """
     Delete a Thing
     """
+
     # Get info about the thing to delete
     db = get_db()
     query = "SELECT image, owner FROM things WHERE id=?"
@@ -121,6 +126,7 @@ def list_users():
     """
     All users page
     """
+
     db = get_db()
     query = "SELECT * FROM users ORDER BY name ASC"
     users = db.execute(query).fetchall()
@@ -134,6 +140,7 @@ def show_user(id: int):
     """
     Users page, but with specific user focused
     """
+
     db = get_db()
     query = "SELECT * FROM users ORDER BY name ASC"
     users = db.execute(query).fetchall()
@@ -147,6 +154,7 @@ def user_details(id: int):
     """
     User details component from HTMX request
     """
+
     db = get_db()
     # Get user info
     query = "SELECT * FROM users WHERE id=?"
@@ -164,6 +172,7 @@ def delete_user(id: int):
     """
     Delete a User
     """
+
     # Check that this is the logged in user
     if session["id"] and int(id) == session["id"]:
         # Delete the DB record
@@ -189,6 +198,7 @@ def uploaded_file(filename):
     """
     Uploaded File Route (for thing images)
     """
+
     return get_file(filename)
 
 
@@ -198,4 +208,5 @@ def not_found(e):
     """
     Missing resource page
     """
+
     return render_template("pages/404.jinja")
